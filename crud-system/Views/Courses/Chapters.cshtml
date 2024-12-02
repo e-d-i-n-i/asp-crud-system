@@ -1,0 +1,42 @@
+﻿@model IEnumerable<crud_system.Models.Chapter>
+
+<h2>Chapters</h2>
+
+<p>
+    <a href="@Url.Action("Index", "Courses")" class="btn btn-primary">Back to Courses</a>
+    @if (Model.Any())
+    {
+        <a href="@Url.Action("AddChapter", "Courses", new { courseId = Model.First().CourseID })" class="btn btn-success">Add Chapter</a>
+    }
+    else
+    {
+        <a href="@Url.Action("AddChapter", "Courses", new { courseId = @ViewData["CourseID"] })" class="btn btn-success">Add Chapter</a>
+    }
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course Name</th>
+            <th>Chapter Number</th>
+            <th>Chapter Video</th>
+            <th>Chapter PDF</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var chapter in Model)
+        {
+            <tr>
+                <td>@chapter.CourseName</td>
+                <td>@chapter.ChapterNumber</td>
+                <td>@chapter.ChapterVideo</td>
+                <td>@chapter.ChapterPDF</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Chapters", new { id = chapter.ChapterID })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Delete", "Chapters", new { id = chapter.ChapterID })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -30,6 +30,7 @@
                 <td>
                     <a href="@Url.Action("Edit","Courses", new { id = course.CourseID })" class="btn btn-warning">Edit</a>
                     <a href="@Url.Action("Delete", new { id = course.CourseID })" class="btn btn-danger">Delete</a>
+                    <a href="@Url.Action("Chapters", new { id = course.CourseID })" class="btn btn-primary">Open</a> 
                 </td>
             </tr>
         }

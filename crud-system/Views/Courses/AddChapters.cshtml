@@ -1,0 +1,33 @@
+﻿@model crud_system.Models.Chapter
+
+<h2>Add Chapter</h2>
+
+<p>
+    <a href="@Url.Action("Chapters", "Courses", new { id = Model.CourseID })" class="btn btn-primary">Back to Chapters</a>
+</p>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="CourseName">Course Name</label>
+        <input type="text" class="form-control" id="CourseName" value="@Model.CourseName" disabled />
+    </div>
+
+    <div class="form-group">
+        <label for="ChapterNumber">Chapter Number</label>
+        <input type="number" class="form-control" id="ChapterNumber" name="ChapterNumber" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ChapterVideo">Chapter Video</label>
+        <input type="file" class="form-control" id="ChapterVideo" name="chapterVideo" accept="video/*,image/gif" />
+        <small class="form-text text-muted">Accepts video files or GIFs only.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="ChapterPDF">Chapter PDF</label>
+        <input type="file" class="form-control" id="ChapterPDF" name="chapterPDF" accept="application/pdf" />
+        <small class="form-text text-muted">Accepts PDF files only.</small>
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Chapter</button>
+</form>

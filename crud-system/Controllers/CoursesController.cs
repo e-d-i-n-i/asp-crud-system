@@ -145,5 +145,92 @@ public class CoursesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // GET: Courses/Chapters/5
+    public async Task<IActionResult> Chapters(Guid id)
+    {
+        // Check if the course exists
+        var course = await _context.Courses
+            .Include(c => c.Chapters) // Include chapters in the course query
+            .FirstOrDefaultAsync(c => c.CourseID == id);
+
+        if (course == null)
+        {
+            return NotFound("Course not found.");
+        }
+
+        // Return a view with the list of chapters for this course
+        return View(course.Chapters);
+    }
+
+    // GET: Courses/AddChapter/{courseId}
+    public IActionResult AddChapter(Guid courseId)
+    {
+        // Fetch the course to make sure it exists
+        var course = _context.Courses.FirstOrDefault(c => c.CourseID == courseId);
+        if (course == null)
+        {
+            return NotFound("Course not found.");
+        }
+
+        // Create a new Chapter model and pass the course ID to it
+        var model = new Chapter { CourseID = courseId, CourseName = course.CourseName };
+        return View(model);
+    }
+    // POST: Courses/AddChapter/{courseId}
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddChapter(Guid courseId, Chapter chapter, IFormFile chapterVideo, IFormFile chapterPDF)
+    {
+        if (chapterVideo != null && !chapterVideo.ContentType.StartsWith("video/") && !chapterVideo.ContentType.Equals("image/gif"))
+        {
+            ModelState.AddModelError("ChapterVideo", "Only video files or GIFs are allowed.");
+        }
+
+        if (chapterPDF != null && !chapterPDF.ContentType.Equals("application/pdf"))
+        {
+            ModelState.AddModelError("ChapterPDF", "Only PDF files are allowed.");
+        }
+
+        // If there are errors in the model state, return the view with errors
+        if (!ModelState.IsValid)
+        {
+            return View(chapter);
+        }
+
+        // Handle file uploads
+        string videoFilePath = null;
+        string pdfFilePath = null;
+
+        if (chapterVideo != null)
+        {
+            // Generate file name
+            videoFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "videos", chapterVideo.FileName);
+            using (var fileStream = new FileStream(videoFilePath, FileMode.Create))
+            {
+                await chapterVideo.CopyToAsync(fileStream);
+            }
+        }
+
+        if (chapterPDF != null)
+        {
+            // Generate file name
+            pdfFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pdfs", chapterPDF.FileName);
+            using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
+            {
+                await chapterPDF.CopyToAsync(fileStream);
+            }
+        }
+
+        // Set the file paths in the chapter
+        chapter.ChapterVideo = videoFilePath;
+        chapter.ChapterPDF = pdfFilePath;
+
+        // Save chapter to database
+        _context.Chapters.Add(chapter);
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Chapter added successfully!";
+        return RedirectToAction(nameof(Chapters), new { id = courseId });
+    }
 
 }
