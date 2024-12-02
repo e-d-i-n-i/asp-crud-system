@@ -42,12 +42,14 @@ public class StudentsController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        // Populate any needed dropdowns or data for the view here
-        // For example, passing a list of courses to the view (if needed)
-        ViewBag.Courses = _context.Courses.ToList(); // If you need to select a Course
+        // Fetch course names from the database and pass them to the view
+        ViewBag.Courses = _context.Courses
+                                  .Select(c => c.CourseName)
+                                  .ToList();
 
         return View();
     }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateStudentViewModel model)
     {

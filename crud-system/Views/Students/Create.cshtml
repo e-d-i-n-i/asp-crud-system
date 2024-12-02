@@ -42,7 +42,13 @@
 
     <div class="mb-3">
         <label asp-for="CourseName" class="form-label"></label>
-        <input asp-for="CourseName" class="form-control" />
+        <select asp-for="CourseName" class="form-control">
+            <option value="" disabled selected>Select a course</option>
+            @foreach (var course in ViewBag.Courses as List<string>)
+            {
+                <option value="@course">@course</option>
+            }
+        </select>
         <span asp-validation-for="CourseName" class="text-danger"></span>
     </div>
 
