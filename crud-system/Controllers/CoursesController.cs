@@ -44,48 +44,56 @@ public class CoursesController : Controller
     {
         if (id == Guid.Empty)
         {
-            return NotFound();
+            return BadRequest("Invalid course ID.");
         }
 
         var course = await _context.Courses.FindAsync(id);
         if (course == null)
         {
-            return NotFound();
+            return NotFound("Course not found.");
         }
+
         return View(course);
     }
 
     // POST: Courses/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, [Bind("CourseID,CourseName,CourseChapter")] Course course)
+    public async Task<IActionResult> Edit(Guid id, Course course)
     {
         if (id != course.CourseID)
         {
-            return NotFound();
+            return BadRequest("Course ID mismatch.");
         }
 
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            try
-            {
-                _context.Update(course);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Courses.Any(e => e.CourseID == course.CourseID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            return View(course);
         }
-        return View(course);
+
+        try
+        {
+            _context.Entry(course).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!await CourseExists(course.CourseID))
+            {
+                return NotFound("Course no longer exists.");
+            }
+            throw;
+        }
+
+        TempData["SuccessMessage"] = "Course updated successfully!";
+        return RedirectToAction(nameof(Index));
+    }
+
+
+    // Helper method to check course existence
+    private async Task<bool> CourseExists(Guid id)
+    {
+        return await _context.Courses.AnyAsync(e => e.CourseID == id);
     }
 
     // GET: Courses/Delete/5
