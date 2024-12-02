@@ -104,7 +104,7 @@ public class StudentsController : Controller
                 await _context.SaveChangesAsync();
 
                 // Redirect to the Index page after successful creation
-                TempData["SuccessMessage"] = "Student created successfully!";
+                TempData["SuccessMessage"] = "Student added successfully!";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
