@@ -23,21 +23,29 @@ public class CoursesController : Controller
     {
         return View();
     }
-
     // POST: Courses/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("CourseID,CourseName,CourseChapter")] Course course)
     {
+        // Check if the course name already exists in the database
+        if (_context.Courses.Any(c => c.CourseName == course.CourseName))
+        {
+            ModelState.AddModelError("CourseName", "A course with this name already exists.");
+            return View(course); // Return the view with the error message
+        }
+
         if (ModelState.IsValid)
         {
             course.CourseID = Guid.NewGuid(); // Set the CourseID
             _context.Add(course);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Course Added successfully!";
             return RedirectToAction(nameof(Index));
         }
         return View(course);
     }
+
 
     // GET: Courses/Edit/5
     public async Task<IActionResult> Edit(Guid id)
@@ -66,28 +74,36 @@ public class CoursesController : Controller
             return BadRequest("Course ID mismatch.");
         }
 
-        if (!ModelState.IsValid)
+        // Check if the course name already exists in the database (excluding the current course)
+        if (_context.Courses.Any(c => c.CourseName == course.CourseName && c.CourseID != id))
         {
-            return View(course);
+            ModelState.AddModelError("CourseName", "A course with this name already exists.");
+            return View(course); // Return the view with the error message
         }
 
-        try
+        if (ModelState.IsValid)
         {
-            _context.Entry(course).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!await CourseExists(course.CourseID))
+            try
             {
-                return NotFound("Course no longer exists.");
+                _context.Entry(course).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
             }
-            throw;
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await CourseExists(course.CourseID))
+                {
+                    return NotFound("Course no longer exists.");
+                }
+                throw;
+            }
+
+            TempData["SuccessMessage"] = "Course updated successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
-        TempData["SuccessMessage"] = "Course updated successfully!";
-        return RedirectToAction(nameof(Index));
+        return View(course);
     }
+
 
 
     // Helper method to check course existence
@@ -125,6 +141,7 @@ public class CoursesController : Controller
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
         }
+        TempData["SuccessMessage"] = "Course Deleted successfully!";
         return RedirectToAction(nameof(Index));
     }
 

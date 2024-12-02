@@ -2,6 +2,13 @@
 
 <h2>Courses</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <p>
     <a href="@Url.Action("Create")" class="btn btn-primary">Create New Course</a>
 </p>

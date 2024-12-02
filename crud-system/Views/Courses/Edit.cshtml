@@ -2,13 +2,6 @@
 
 <h2>Edit Course</h2>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
 <form method="post" asp-action="Edit" asp-route-id="@Model.CourseID">
     @Html.AntiForgeryToken()
 
@@ -17,7 +10,7 @@
     <div class="mb-3">
         <label for="CourseName" class="form-label">Course Name</label>
         <input asp-for="CourseName" class="form-control" />
-        <span asp-validation-for="CourseName" class="text-danger"></span>
+        <span asp-validation-for="CourseName" class="text-danger"></span> <!-- Validation message here -->
     </div>
 
     <div class="mb-3">

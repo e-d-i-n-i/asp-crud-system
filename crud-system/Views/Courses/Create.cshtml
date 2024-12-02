@@ -6,6 +6,7 @@
     <div class="form-group">
         <label for="CourseName">Course Name</label>
         <input type="text" class="form-control" id="CourseName" name="CourseName" required />
+        <span asp-validation-for="CourseName" class="text-danger"></span> <!-- Validation message here -->
     </div>
 
     <div class="form-group">
