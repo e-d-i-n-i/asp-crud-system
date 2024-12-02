@@ -2,16 +2,20 @@
 
 <h2>Edit Course</h2>
 
-<form asp-action="Edit" method="post">
-    <div class="form-group">
+<form method="post" asp-action="Edit" asp-route-id="@Model.CourseID">
+    @Html.AntiForgeryToken()
+
+    <div>
         <label for="CourseName">Course Name</label>
-        <input type="text" class="form-control" id="CourseName" name="CourseName" value="@Model.CourseName" required />
+        <input asp-for="CourseName" class="form-control" />
+        <span asp-validation-for="CourseName" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label for="CourseChapter">Number of Chapters</label>
-        <input type="number" class="form-control" id="CourseChapter" name="CourseChapter" value="@Model.CourseChapter" required />
+    <div>
+        <label for="CourseChapter">Course Chapter</label>
+        <input asp-for="CourseChapter" class="form-control" />
+        <span asp-validation-for="CourseChapter" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-warning">Update Course</button>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>

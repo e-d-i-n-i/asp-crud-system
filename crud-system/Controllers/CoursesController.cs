@@ -42,7 +42,7 @@ public class CoursesController : Controller
     // GET: Courses/Edit/5
     public async Task<IActionResult> Edit(Guid id)
     {
-        if (id == null)
+        if (id == Guid.Empty)
         {
             return NotFound();
         }
@@ -91,7 +91,7 @@ public class CoursesController : Controller
     // GET: Courses/Delete/5
     public async Task<IActionResult> Delete(Guid id)
     {
-        if (id == null)
+        if (id == Guid.Empty)
         {
             return NotFound();
         }
@@ -112,8 +112,13 @@ public class CoursesController : Controller
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
         var course = await _context.Courses.FindAsync(id);
-        _context.Courses.Remove(course);
-        await _context.SaveChangesAsync();
+        if (course != null)
+        {
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync();
+        }
         return RedirectToAction(nameof(Index));
     }
+
+
 }
