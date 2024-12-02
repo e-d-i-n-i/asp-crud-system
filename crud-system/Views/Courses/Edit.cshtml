@@ -1,0 +1,17 @@
+﻿@model crud_system.Models.Course
+
+<h2>Edit Course</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label for="CourseName">Course Name</label>
+        <input type="text" class="form-control" id="CourseName" name="CourseName" value="@Model.CourseName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="CourseChapter">Number of Chapters</label>
+        <input type="number" class="form-control" id="CourseChapter" name="CourseChapter" value="@Model.CourseChapter" required />
+    </div>
+
+    <button type="submit" class="btn btn-warning">Update Course</button>
+</form>
