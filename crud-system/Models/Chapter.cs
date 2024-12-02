@@ -7,8 +7,6 @@ namespace crud_system.Models
         [Key]
         public Guid ChapterID { get; set; }
 
-        public Guid CourseID { get; set; } // Foreign key to Course
-
         public string CourseName { get; set; }
 
         public int ChapterNumber { get; set; }

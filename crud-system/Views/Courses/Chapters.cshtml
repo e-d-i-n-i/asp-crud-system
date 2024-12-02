@@ -6,7 +6,7 @@
     <a href="@Url.Action("Index", "Courses")" class="btn btn-primary">Back to Courses</a>
     @if (Model.Any())
     {
-        <a href="@Url.Action("AddChapter", "Courses", new { courseId = Model.First().CourseID })" class="btn btn-success">Add Chapter</a>
+        <a href="@Url.Action("AddChapter", "Courses", new { courseId = Model.First().CourseName })" class="btn btn-success">Add Chapter</a>
     }
     else
     {

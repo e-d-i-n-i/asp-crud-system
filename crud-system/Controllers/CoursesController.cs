@@ -173,7 +173,7 @@ public class CoursesController : Controller
         }
 
         // Create a new Chapter model and pass the course ID to it
-        var model = new Chapter { CourseID = courseId, CourseName = course.CourseName };
+        var model = new Chapter { CourseName = course.CourseName };
         return View(model);
     }
     // POST: Courses/AddChapter/{courseId}

@@ -23,7 +23,8 @@ namespace crud_system.Data
             modelBuilder.Entity<Chapter>()
                 .HasOne(c => c.Course)
                 .WithMany(c => c.Chapters)
-                .HasForeignKey(c => c.CourseID);
+                .HasForeignKey(c => c.CourseName)  // Use CourseName as the foreign key
+                .HasPrincipalKey(c => c.CourseName);  // Use CourseName as the principal key
 
             // Ensure CourseName is a unique alternate key
             modelBuilder.Entity<Course>()
