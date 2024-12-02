@@ -38,8 +38,8 @@
                 <td>@student.ClassType</td>
                 <td>@student.Course.CourseName</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Students", new { id = student.StudentID })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("Delete", "Students", new { id = student.StudentID })" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@student.StudentID" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@student.StudentID" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }

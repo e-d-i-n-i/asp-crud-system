@@ -124,5 +124,53 @@ public class StudentsController : Controller
     }
 
 
+    // GET: Students/Delete/5
+    [HttpGet]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return NotFound();
+        }
+
+        // Fetch the student record including related Course for display purposes
+        var student = await _context.Students
+                                     .Include(s => s.Course)
+                                     .FirstOrDefaultAsync(s => s.StudentID == id);
+        if (student == null)
+        {
+            return NotFound();
+        }
+
+        return View(student);
+    }
+
+    // POST: Students/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(Guid id)
+    {
+        var student = await _context.Students
+                                     .Include(s => s.StudentAccess) // Include related StudentAccess for removal
+                                     .FirstOrDefaultAsync(s => s.StudentID == id);
+
+        if (student != null)
+        {
+            // Remove associated StudentAccess if exists
+            if (student.StudentAccess != null)
+            {
+                _context.StudentAccesses.Remove(student.StudentAccess);
+            }
+
+            // Remove the student
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+        }
+
+        TempData["SuccessMessage"] = "Student deleted successfully!";
+        return RedirectToAction(nameof(Index));
+    }
 
 }
+
+

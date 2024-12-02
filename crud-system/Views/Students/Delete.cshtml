@@ -1,10 +1,10 @@
 ﻿@model crud_system.Models.Student
 
 <h2>Delete Student</h2>
-
 <p>Are you sure you want to delete the student "@Model.FirstName @Model.LastName"?</p>
 
 <form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" name="id" value="@Model.StudentID" />
     <button type="submit" class="btn btn-danger">Delete</button>
     <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
