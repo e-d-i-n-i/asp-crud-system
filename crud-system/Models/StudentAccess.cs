@@ -1,7 +1,10 @@
-﻿namespace crud_system.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace crud_system.Models
 {
     public class StudentAccess
     {
+        [Key]
         public Guid AccessNumber { get; set; }
 
         public Guid StudentID { get; set; } // Foreign key to Student

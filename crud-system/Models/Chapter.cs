@@ -1,7 +1,10 @@
-﻿namespace crud_system.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace crud_system.Models
 {
     public class Chapter
     {
+        [Key]
         public Guid ChapterID { get; set; }
 
         public Guid CourseID { get; set; } // Foreign key to Course

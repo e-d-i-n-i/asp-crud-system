@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using crud_system.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace crud_system.Models.Context
+namespace crud_system.Data
 {
     public class CourseManagementContext : DbContext
     {

@@ -1,4 +1,4 @@
-using crud_system.Models.Context;
+using crud_system.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

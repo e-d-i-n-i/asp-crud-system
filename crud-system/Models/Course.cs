@@ -1,9 +1,11 @@
-﻿using System.Data;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace crud_system.Models
 {
     public class Course
     {
+        [Key]
         public Guid CourseID { get; set; }
 
         public string CourseName { get; set; } // Unique constraint will be applied via EF Fluent API

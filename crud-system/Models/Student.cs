@@ -1,7 +1,10 @@
-﻿namespace crud_system.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace crud_system.Models
 {
     public class Student
     {
+        [Key]
         public Guid StudentID { get; set; }
 
         public string FirstName { get; set; }
