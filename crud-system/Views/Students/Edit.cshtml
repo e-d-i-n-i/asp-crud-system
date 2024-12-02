@@ -1,0 +1,46 @@
+﻿@model crud_system.Models.Student
+
+<h2>Edit Student</h2>
+
+<form method="post" asp-action="Edit" asp-route-id="@Model.StudentID">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="FirstName">First Name</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="MiddleName">Middle Name</label>
+        <input type="text" class="form-control" id="MiddleName" name="MiddleName" value="@Model.MiddleName" />
+    </div>
+
+    <div class="form-group">
+        <label for="LastName">Last Name</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="PhoneNumber">Phone Number</label>
+        <input type="number" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ClassType">Class Type</label>
+        <input type="text" class="form-control" id="ClassType" name="ClassType" value="@Model.ClassType" />
+    </div>
+
+    <div class="form-group">
+        <label for="CourseID">Course</label>
+        <select asp-for="CourseID" class="form-control" asp-items="@(new SelectList(ViewData["CourseID"] as IEnumerable<SelectListItem>))">
+            <option value="">-- Select a Course --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
