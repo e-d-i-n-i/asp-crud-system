@@ -1,0 +1,69 @@
+﻿@model IEnumerable<crud_system.Models.Chapter>
+
+@{
+    ViewData["Title"] = "Chapters List";
+}
+
+<h2>Chapters List</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add New Chapter</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Chapter Number</th>
+            <th>Course Name</th>
+            <th>Video</th>
+            <th>PDF</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var chapter in Model)
+            {
+                <tr>
+                    <td>@chapter.ChapterNumber</td>
+                    <td>@chapter.CourseName</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(chapter.ChapterVideo))
+                        {
+                            <a href="@chapter.ChapterVideo" target="_blank">View Video</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No Video</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(chapter.ChapterPDF))
+                        {
+                            <a href="@chapter.ChapterPDF" target="_blank">Download PDF</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No PDF</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@chapter.ChapterID" class="btn btn-warning btn-sm">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@chapter.ChapterID" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this chapter?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No chapters found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
