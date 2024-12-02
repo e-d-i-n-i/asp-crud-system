@@ -123,6 +123,113 @@ public class StudentsController : Controller
         return View(model);
     }
 
+    // GET: Students/Edit/5
+    [HttpGet]
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return BadRequest("Invalid student ID.");
+        }
+
+        var student = await _context.Students
+                                    .Include(s => s.Course) // Include related Course for proper population
+                                    .FirstOrDefaultAsync(s => s.StudentID == id);
+
+        if (student == null)
+        {
+            return NotFound("Student not found.");
+        }
+
+        // Fetch all courses for the dropdown
+        ViewBag.Courses = await _context.Courses
+                                        .Select(c => c.CourseName)
+                                        .ToListAsync();
+
+        // Map Student entity to a view model if needed
+        var model = new EditStudentViewModel
+        {
+            StudentID = student.StudentID,
+            FirstName = student.FirstName,
+            MiddleName = student.MiddleName,
+            LastName = student.LastName,
+            PhoneNumber = student.PhoneNumber,
+            Email = student.Email,
+            ClassType = student.ClassType,
+            CourseName = student.CourseName // Pre-select the current course
+        };
+
+        return View(model);
+    }
+
+    // POST: Students/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(Guid id, EditStudentViewModel model)
+    {
+        if (id != model.StudentID)
+        {
+            return BadRequest("Student ID mismatch.");
+        }
+
+        // Fetch the corresponding Course entity
+        var course = await _context.Courses
+                                   .FirstOrDefaultAsync(c => c.CourseName == model.CourseName);
+
+        if (course == null)
+        {
+            ModelState.AddModelError("CourseName", "The selected course does not exist.");
+        }
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                // Fetch the existing student
+                var student = await _context.Students.FindAsync(id);
+                if (student == null)
+                {
+                    return NotFound("Student not found.");
+                }
+
+                // Update student properties
+                student.FirstName = model.FirstName;
+                student.MiddleName = model.MiddleName;
+                student.LastName = model.LastName;
+                student.PhoneNumber = model.PhoneNumber;
+                student.Email = model.Email;
+                student.ClassType = model.ClassType;
+                student.CourseName = model.CourseName;
+                student.Course = course;
+
+                _context.Update(student);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Student updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await StudentExists(id))
+                {
+                    return NotFound("Student no longer exists.");
+                }
+                throw;
+            }
+        }
+
+        // Re-populate courses for the view if validation fails
+        ViewBag.Courses = await _context.Courses.Select(c => c.CourseName).ToListAsync();
+        return View(model);
+    }
+
+    // Helper method to check student existence
+    private async Task<bool> StudentExists(Guid id)
+    {
+        return await _context.Students.AnyAsync(e => e.StudentID == id);
+    }
+
+
 
     // GET: Students/Delete/5
     [HttpGet]
