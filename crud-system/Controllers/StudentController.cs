@@ -13,125 +13,114 @@ public class StudentsController : Controller
         _context = context;
     }
 
-    // GET: Students
-    public async Task<IActionResult> Index()
+    [HttpGet]
+    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
     {
-        var students = _context.Students.Include(s => s.Course);
-        return View(await students.ToListAsync());
+        // Get the total count of students for pagination
+        var totalStudents = await _context.Students.CountAsync();
+
+        // Fetch students for the current page with course data loaded
+        var students = await _context.Students
+                                      .Include(s => s.Course)  // Ensure Course data is loaded
+                                      .Skip((pageNumber - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+        // Prepare pagination information
+        var model = new StudentIndexViewModel
+        {
+            Students = students,
+            TotalStudents = totalStudents,
+            CurrentPage = pageNumber,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalStudents / pageSize)
+        };
+
+        return View(model);
     }
 
-    // GET: Students/Create
+    [HttpGet]
     public IActionResult Create()
     {
-        ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseName");
+        // Populate any needed dropdowns or data for the view here
+        // For example, passing a list of courses to the view (if needed)
+        ViewBag.Courses = _context.Courses.ToList(); // If you need to select a Course
+
         return View();
     }
-
-    // POST: Students/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("FirstName,MiddleName,LastName,PhoneNumber,Email,ClassType,CourseID")] Student student)
+    public async Task<IActionResult> Create(CreateStudentViewModel model)
     {
-        if (ModelState.IsValid)
+        if (model == null)
         {
-            student.StudentID = Guid.NewGuid(); // Generate unique ID for the student
-            _context.Add(student);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Student added successfully!";
-            return RedirectToAction(nameof(Index));
-        }
-        ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseName", student.CourseID);
-        return View(student);
-    }
-
-    // GET: Students/Edit/5
-    public async Task<IActionResult> Edit(Guid id)
-    {
-        if (id == Guid.Empty)
-        {
-            return BadRequest("Invalid student ID.");
+            // Return an error or handle the case where the model object is null
+            ViewBag.ErrorMessage = "Student object cannot be null.";
+            return View();
         }
 
-        var student = await _context.Students.FindAsync(id);
-        if (student == null)
+        // Ensure that you are assigning a valid Course to the student.
+        var course = await _context.Courses
+                                   .FirstOrDefaultAsync(c => c.CourseName == model.CourseName);
+
+        if (course == null)
         {
-            return NotFound("Student not found.");
+            // If no matching course is found, return an error message
+            ModelState.AddModelError("CourseName", "The selected course does not exist.");
         }
 
-        ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseName", student.CourseID);
-        return View(student);
-    }
-
-    // POST: Students/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, [Bind("StudentID,FirstName,MiddleName,LastName,PhoneNumber,Email,ClassType,CourseID")] Student student)
-    {
-        if (id != student.StudentID)
-        {
-            return BadRequest("Student ID mismatch.");
-        }
-
+        // If model is valid and course is found, proceed with creating the Student and StudentAccess
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Entry(student).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Student updated successfully!";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await StudentExists(student.StudentID))
+                // Create StudentAccess record first
+                var studentAccess = new StudentAccess
                 {
-                    return NotFound("Student no longer exists.");
-                }
-                throw;
+                    AccessNumber = Guid.NewGuid(),
+                    Username = $"{model.FirstName.ToLower()}.{model.LastName.ToLower()}",  // Simple Username logic
+                    Password = "TempPassword123",  // Temporary or generated password (you should hash it before storing in production)
+                    CourseName = model.CourseName,
+                    CourseType = model.ClassType,  // Assuming ClassType correlates to CourseType
+                };
+
+                // Create the full Student object
+                var newStudent = new Student
+                {
+                    StudentID = Guid.NewGuid(),  // Generate a unique StudentID
+                    FirstName = model.FirstName,
+                    MiddleName = model.MiddleName,
+                    LastName = model.LastName,
+                    PhoneNumber = model.PhoneNumber,
+                    Email = model.Email,
+                    ClassType = model.ClassType,
+                    CourseName = model.CourseName,
+                    Course = course,  // Assign the course object
+                    StudentAccess = studentAccess  // Assign the related StudentAccess object
+                };
+
+                // Add the new student and student access to the database
+                await _context.Students.AddAsync(newStudent);
+                await _context.StudentAccesses.AddAsync(studentAccess);  // Add the StudentAccess record
+                await _context.SaveChangesAsync();
+
+                // Redirect to the Index page after successful creation
+                TempData["SuccessMessage"] = "Student created successfully!";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Handle errors
+                ViewBag.ErrorMessage = "An error occurred while creating the student. Please try again.";
+                ViewBag.Courses = _context.Courses.ToList();  // Pass courses if needed
+                return View(model);
             }
         }
 
-        ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseName", student.CourseID);
-        return View(student);
+        // If ModelState is invalid, return the same view with validation errors
+        ViewBag.Courses = _context.Courses.ToList();  // Pass available courses to the view
+        return View(model);
     }
 
-    // GET: Students/Delete/5
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        if (id == Guid.Empty)
-        {
-            return NotFound();
-        }
 
-        var student = await _context.Students
-            .Include(s => s.Course)
-            .FirstOrDefaultAsync(s => s.StudentID == id);
-        if (student == null)
-        {
-            return NotFound("Student not found.");
-        }
 
-        return View(student);
-    }
-
-    // POST: Students/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(Guid id)
-    {
-        var student = await _context.Students.FindAsync(id);
-        if (student != null)
-        {
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Student deleted successfully!";
-        }
-        return RedirectToAction(nameof(Index));
-    }
-
-    // Helper method to check student existence
-    private async Task<bool> StudentExists(Guid id)
-    {
-        return await _context.Students.AnyAsync(e => e.StudentID == id);
-    }
 }

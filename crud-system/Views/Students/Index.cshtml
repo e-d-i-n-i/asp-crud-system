@@ -1,4 +1,4 @@
-﻿@model IEnumerable<crud_system.Models.Student>
+﻿@model StudentIndexViewModel
 
 <h2>Students</h2>
 
@@ -24,18 +24,38 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var student in Model)
+        @foreach (var student in Model.Students)
         {
             <tr>
                 <td>@student.FirstName</td>
                 <td>@student.LastName</td>
                 <td>@student.Email</td>
-                <td>@student.Course.CourseName</td>
+                <td>@student.Course?.CourseName ?? "No Course Assigned"</td>
                 <td>
                     <a href="@Url.Action("Edit", "Students", new { id = student.StudentID })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("Delete", "Students", new { id = student.StudentID })" class="btn btn-danger">Delete</a>
+                    <a href="@Url.Action("Delete", "Students", new { id = student.StudentID })" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@if (!Model.Students.Any())
+{
+    <div class="alert alert-info">No students available.</div>
+}
+
+<!-- Pagination -->
+<div class="pagination">
+    @if (Model.CurrentPage > 1)
+    {
+        <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage - 1 })" class="btn btn-secondary">Previous</a>
+    }
+
+    <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+
+    @if (Model.CurrentPage < Model.TotalPages)
+    {
+        <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage + 1 })" class="btn btn-secondary">Next</a>
+    }
+</div>

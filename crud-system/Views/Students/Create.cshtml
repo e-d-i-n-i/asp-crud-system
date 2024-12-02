@@ -1,54 +1,41 @@
-﻿@model crud_system.Models.Student
+﻿@model CreateStudentViewModel
 
-<h2>Create New Student</h2>
-
-<!-- Validation Summary for Model-Level Errors -->
-<div asp-validation-summary="All" class="text-danger"></div>
-
-<form method="post" asp-action="Create">
-    <div class="form-group">
-        <label asp-for="FirstName" class="control-label"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName"></span>
+    </div>
+    <div>
+        <label asp-for="MiddleName"></label>
+        <input asp-for="MiddleName" />
+        <span asp-validation-for="MiddleName"></span>
+    </div>
+    <div>
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+    <div>
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" />
+        <span asp-validation-for="PhoneNumber"></span>
+    </div>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="ClassType"></label>
+        <input asp-for="ClassType" />
+        <span asp-validation-for="ClassType"></span>
+    </div>
+    <div>
+        <label asp-for="CourseName"></label>
+        <input asp-for="CourseName" />
+        <span asp-validation-for="CourseName"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="MiddleName" class="control-label"></label>
-        <input asp-for="MiddleName" class="form-control" />
-        <span asp-validation-for="MiddleName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="LastName" class="control-label"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PhoneNumber" class="control-label"></label>
-        <input asp-for="PhoneNumber" class="form-control" type="number" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" type="email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ClassType" class="control-label"></label>
-        <input asp-for="ClassType" class="form-control" />
-        <span asp-validation-for="ClassType" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="CourseID" class="control-label">Course Name</label>
-        <select asp-for="CourseID" class="form-control" asp-items="@(ViewData["CourseID"] as SelectList)">
-            <option value="">-- Select a Course --</option>
-        </select>
-        <span asp-validation-for="CourseID" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Create Student</button>
+    <button type="submit">Create Student</button>
 </form>

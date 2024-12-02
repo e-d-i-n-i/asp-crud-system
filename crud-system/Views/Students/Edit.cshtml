@@ -35,12 +35,7 @@
         <input type="text" class="form-control" id="ClassType" name="ClassType" value="@Model.ClassType" />
     </div>
 
-    <div class="form-group">
-        <label for="CourseID">Course</label>
-        <select asp-for="CourseID" class="form-control" asp-items="@(new SelectList(ViewData["CourseID"] as IEnumerable<SelectListItem>))">
-            <option value="">-- Select a Course --</option>
-        </select>
-    </div>
+    
 
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>

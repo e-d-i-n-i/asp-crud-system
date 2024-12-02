@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace crud_system.Models
 {
@@ -18,9 +19,9 @@ namespace crud_system.Models
         public string Email { get; set; }
 
         public string ClassType { get; set; }
-        public string CourseName { get; set; }
 
-        public Guid CourseID { get; set; } // Foreign key to Course
+        public string CourseName { get; set; } // Foreign key to Course
+
 
         // Navigation property for the related course
         public Course Course { get; set; }

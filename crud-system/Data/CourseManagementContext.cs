@@ -25,11 +25,17 @@ namespace crud_system.Data
                 .WithMany(c => c.Chapters)
                 .HasForeignKey(c => c.CourseID);
 
+            // Ensure CourseName is a unique alternate key
+            modelBuilder.Entity<Course>()
+                .HasAlternateKey(c => c.CourseName);
+
             // Course -> Student: One-to-Many
             modelBuilder.Entity<Student>()
-                .HasOne(s => s.Course)
-                .WithMany(c => c.Students) // Corrected to Courses
-                .HasForeignKey(s => s.CourseID);
+                        .HasOne(s => s.Course)
+                        .WithMany(c => c.Students)
+                        .HasForeignKey(s => s.CourseName)
+                        .HasPrincipalKey(c => c.CourseName); // Matchs foreign key to the alternate key
+
 
             // Student -> StudentAccess: One-to-One
             modelBuilder.Entity<StudentAccess>()
@@ -41,6 +47,8 @@ namespace crud_system.Data
             modelBuilder.Entity<Course>()
                 .HasIndex(c => c.CourseName)
                 .IsUnique();
+                       
+
         }
     }
 }
