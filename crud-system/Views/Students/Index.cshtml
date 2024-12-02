@@ -17,8 +17,11 @@
     <thead>
         <tr>
             <th>First Name</th>
+            <th>Middle Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Phone Number</th>
+            <th>Class Type</th>
             <th>Course</th>
             <th>Actions</th>
         </tr>
@@ -28,9 +31,12 @@
         {
             <tr>
                 <td>@student.FirstName</td>
+                <td>@student.MiddleName</td>
                 <td>@student.LastName</td>
                 <td>@student.Email</td>
-                <td>@student.Course?.CourseName ?? "No Course Assigned"</td>
+                <td>@student.PhoneNumber</td>
+                <td>@student.ClassType</td>
+                <td>@student.Course.CourseName</td>
                 <td>
                     <a href="@Url.Action("Edit", "Students", new { id = student.StudentID })" class="btn btn-warning">Edit</a>
                     <a href="@Url.Action("Delete", "Students", new { id = student.StudentID })" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
