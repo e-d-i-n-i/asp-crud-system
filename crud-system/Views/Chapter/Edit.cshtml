@@ -1,0 +1,51 @@
+﻿@model crud_system.Models.Chapter
+
+@{
+    ViewData["Title"] = "Edit Chapter";
+}
+
+<h2>Edit Chapter</h2>
+
+@TempData["SuccessMessage"]
+@TempData["ErrorMessage"]
+
+<form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="CourseName">Course</label>
+        <select class="form-control" id="CourseName" name="CourseName" required>
+            <option value="">-- Select a Course --</option>
+            @foreach (var course in ViewBag.Courses as List<crud_system.Models.Course>)
+            {
+                <option value="@course.CourseName">
+                    @course.CourseName
+                </option>
+            }
+        </select>
+        @Html.ValidationMessageFor(m => m.CourseName)
+    </div>
+
+    <div class="form-group">
+        <label for="ChapterNumber">Chapter Number</label>
+        <input type="number" class="form-control" id="ChapterNumber" name="ChapterNumber" value="@Model.ChapterNumber" required />
+        @Html.ValidationMessageFor(m => m.ChapterNumber)
+    </div>
+
+    <div class="form-group">
+        <label for="ChapterVideo">Chapter Video</label>
+        <input type="file" class="form-control" id="ChapterVideo" name="chapterVideo" accept="video/*,image/gif" />
+        <small>Current Video: @Model.ChapterVideo</small>
+        @Html.ValidationMessageFor(m => m.ChapterVideo)
+    </div>
+
+    <div class="form-group">
+        <label for="ChapterPDF">Chapter PDF</label>
+        <input type="file" class="form-control" id="ChapterPDF" name="chapterPDF" accept="application/pdf" />
+        <small>Current PDF: @Model.ChapterPDF</small>
+        @Html.ValidationMessageFor(m => m.ChapterPDF)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary">Back to Chapters</a>

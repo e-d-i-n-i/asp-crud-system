@@ -145,9 +145,12 @@ namespace crud_system.Controllers
                 return NotFound("Chapter not found.");
             }
 
-            ViewBag.Courses = _context.Courses.Select(c => new { c.CourseName }).ToList();
-            return View(chapter);
+            // Populate ViewBag.Courses with the list of courses for the dropdown
+            ViewBag.Courses = await _context.Courses.ToListAsync();
+
+            return View(chapter);  // Pass the chapter model to the view
         }
+
 
         // POST: Chapters/Edit/5
         [HttpPost]
