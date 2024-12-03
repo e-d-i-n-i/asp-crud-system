@@ -4,7 +4,7 @@ using crud_system.Models;
 using crud_system.Data;
 using Microsoft.AspNetCore.Authorization;
 
-[AllowAnonymous]
+[Authorize]
 public class CoursesController : Controller
 {
     private readonly CourseManagementContext _context;

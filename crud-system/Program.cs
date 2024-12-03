@@ -21,8 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // Add authorization services
 builder.Services.AddAuthorization();
 
-// Register IHttpContextAccessor and Session
-builder.Services.AddHttpContextAccessor();
+// Register Session
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
@@ -51,8 +50,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession(); // Enable session before accessing it
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // Authenticate users
+app.UseAuthorization(); // Authorize access based on roles and claims
 
 app.MapControllerRoute(
     name: "default",
