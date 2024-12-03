@@ -31,6 +31,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="Index">Students</a>
                         </li>
+                        @using Microsoft.AspNetCore.Http
+                        @inject IHttpContextAccessor HttpContextAccessor
+
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("Username") != null)
+                        {
+                            <a asp-controller="Account" asp-action="Logout">Logout</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login">Login</a>
+                        }
 
                     </ul>
                 </div>

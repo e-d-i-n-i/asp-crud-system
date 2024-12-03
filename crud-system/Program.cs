@@ -3,8 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add IHttpContextAccessor to the DI container
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register IHttpContextAccessor and Session
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // Mark as essential for GDPR compliance
+});
 
 // Register the CourseManagementContext
 builder.Services.AddDbContext<CourseManagementContext>(options =>
@@ -26,6 +38,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession(); // Enable session before accessing it
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
