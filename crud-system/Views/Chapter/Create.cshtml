@@ -7,12 +7,13 @@
         <label for="CourseName">Select Course</label>
         <select class="form-control" id="CourseName" name="CourseName" required>
             <option value="">-- Select a Course --</option>
-            @foreach (var course in ViewBag.Courses)
+            @foreach (var course in ViewBag.Courses as List<crud_system.Models.Course>)
             {
                 <option value="@course.CourseName">@course.CourseName</option>
             }
+
         </select>
-        <span asp-validation-for="CourseName" class="text-danger"></span> <!-- Validation message here -->
+        <span asp-validation-for="CourseName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -22,14 +23,14 @@
     </div>
 
     <div class="form-group">
-        <label for="ChapterVideo">Chapter Video</label>
-        <input type="file" class="form-control" id="ChapterVideo" name="chapterVideo" accept="video/*,image/gif" />
+        <label for="chapterVideo">Chapter Video</label>
+        <input type="file" class="form-control" id="chapterVideo" name="chapterVideo" accept="video/*,image/gif" />
         <span asp-validation-for="ChapterVideo" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label for="ChapterPDF">Chapter PDF</label>
-        <input type="file" class="form-control" id="ChapterPDF" name="chapterPDF" accept="application/pdf" />
+        <label for="chapterPDF">Chapter PDF</label>
+        <input type="file" class="form-control" id="chapterPDF" name="chapterPDF" accept="application/pdf" />
         <span asp-validation-for="ChapterPDF" class="text-danger"></span>
     </div>
 

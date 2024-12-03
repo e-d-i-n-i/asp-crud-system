@@ -3,6 +3,7 @@ using crud_system.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace crud_system.Controllers
 {
@@ -25,74 +26,109 @@ namespace crud_system.Controllers
         // GET: Chapters/Create
         public IActionResult Create()
         {
-            // Pass courses for selection in the view
-            ViewBag.Courses = _context.Courses.Select(c => new { c.CourseName }).ToList();
+            ViewBag.Courses = _context.Courses.ToList();  // Get courses to display in the dropdown
             return View();
         }
 
-        // POST: Chapters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChapterID,CourseName,ChapterNumber")] Chapter chapter, IFormFile chapterVideo, IFormFile chapterPDF)
+        public async Task<IActionResult> Create(Chapter chapter, IFormFile chapterVideo, IFormFile chapterPDF)
         {
+            // Directory paths for video and PDF files
+            string videoDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "videos");
+            string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pdfs");
+
+            // Check if the directories exist, create them if they don't
+            if (!Directory.Exists(videoDirectory))
+            {
+                Directory.CreateDirectory(videoDirectory);
+                Console.WriteLine("Created video directory: " + videoDirectory);
+            }
+
+            if (!Directory.Exists(pdfDirectory))
+            {
+                Directory.CreateDirectory(pdfDirectory);
+                Console.WriteLine("Created pdf directory: " + pdfDirectory);
+            }
+
+            // Validate Course
             if (!_context.Courses.Any(c => c.CourseName == chapter.CourseName))
             {
                 ModelState.AddModelError("CourseName", "Selected course does not exist.");
+                ViewBag.Courses = _context.Courses.ToList();
+                return View(chapter);
             }
 
-            // Validate file uploads
-            if (chapterVideo != null && !chapterVideo.ContentType.StartsWith("video/") && !chapterVideo.ContentType.Equals("image/gif"))
+            // Validate Files
+            if (chapterVideo != null)
             {
-                ModelState.AddModelError("ChapterVideo", "Only video files or GIFs are allowed.");
-            }
-            if (chapterPDF != null && !chapterPDF.ContentType.Equals("application/pdf"))
-            {
-                ModelState.AddModelError("ChapterPDF", "Only PDF files are allowed.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                // Handle file uploads
-                string videoFilePath = null;
-                string pdfFilePath = null;
-
-                if (chapterVideo != null)
+                if (!chapterVideo.ContentType.StartsWith("video/") && !chapterVideo.ContentType.Equals("image/gif"))
                 {
-                    videoFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "videos", chapterVideo.FileName);
+                    ModelState.AddModelError("ChapterVideo", "Only video files or GIFs are allowed.");
+                }
+                else
+                {
+                    string videoFilePath = Path.Combine(videoDirectory, chapterVideo.FileName);
+                    Console.WriteLine("Saving video file to: " + videoFilePath);
                     using (var fileStream = new FileStream(videoFilePath, FileMode.Create))
                     {
                         await chapterVideo.CopyToAsync(fileStream);
                     }
                     chapter.ChapterVideo = "/uploads/videos/" + chapterVideo.FileName;
                 }
+            }
 
-                if (chapterPDF != null)
+            if (chapterPDF != null)
+            {
+                if (!chapterPDF.ContentType.Equals("application/pdf"))
                 {
-                    pdfFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pdfs", chapterPDF.FileName);
+                    ModelState.AddModelError("ChapterPDF", "Only PDF files are allowed.");
+                }
+                else
+                {
+                    string pdfFilePath = Path.Combine(pdfDirectory, chapterPDF.FileName);
+                    Console.WriteLine("Saving PDF file to: " + pdfFilePath);
                     using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
                     {
                         await chapterPDF.CopyToAsync(fileStream);
                     }
                     chapter.ChapterPDF = "/uploads/pdfs/" + chapterPDF.FileName;
                 }
+            }
 
-                chapter.ChapterID = Guid.NewGuid();
+            // Logging the values before saving
+            Console.WriteLine("Chapter Video Path: " + chapter.ChapterVideo);
+            Console.WriteLine("Chapter PDF Path: " + chapter.ChapterPDF);
+
+            // If validation is successful, proceed to save the chapter
+            
+                chapter.ChapterID = Guid.NewGuid(); // Assign a new ChapterID
                 _context.Add(chapter);
 
-                // Increment chapter count for the course
+                // Increment chapter count for the associated course
                 var course = _context.Courses.FirstOrDefault(c => c.CourseName == chapter.CourseName);
                 if (course != null)
                 {
                     course.CourseChapter++;
+                    _context.Update(course);
                 }
 
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Chapter added successfully!";
-                return RedirectToAction(nameof(Index));
-            }
+                // Save changes to the database
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Chapter added successfully!";
+                    return RedirectToAction(nameof(Index));  // Redirect to the list of chapters
+                }
+                catch (Exception ex)
+                {
+                    // Log the error (could be logging framework or Console)
+                    Console.WriteLine("Error saving chapter: " + ex.Message);
+                    TempData["ErrorMessage"] = "Error occurred while saving the chapter.";
+                    return View(chapter);
+                }
+            
 
-            ViewBag.Courses = _context.Courses.Select(c => new { c.CourseName }).ToList();
-            return View(chapter);
         }
 
         // GET: Chapters/Edit/5
@@ -128,6 +164,21 @@ namespace crud_system.Controllers
                 ModelState.AddModelError("CourseName", "Selected course does not exist.");
             }
 
+            // Directory paths for video and PDF files
+            string videoDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "videos");
+            string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pdfs");
+
+            // Check if the directories exist, create them if they don't
+            if (!Directory.Exists(videoDirectory))
+            {
+                Directory.CreateDirectory(videoDirectory);
+            }
+
+            if (!Directory.Exists(pdfDirectory))
+            {
+                Directory.CreateDirectory(pdfDirectory);
+            }
+
             // Handle file uploads if new files are provided
             if (chapterVideo != null)
             {
@@ -137,7 +188,7 @@ namespace crud_system.Controllers
                 }
                 else
                 {
-                    string videoFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "videos", chapterVideo.FileName);
+                    string videoFilePath = Path.Combine(videoDirectory, chapterVideo.FileName);
                     using (var fileStream = new FileStream(videoFilePath, FileMode.Create))
                     {
                         await chapterVideo.CopyToAsync(fileStream);
@@ -154,7 +205,7 @@ namespace crud_system.Controllers
                 }
                 else
                 {
-                    string pdfFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pdfs", chapterPDF.FileName);
+                    string pdfFilePath = Path.Combine(pdfDirectory, chapterPDF.FileName);
                     using (var fileStream = new FileStream(pdfFilePath, FileMode.Create))
                     {
                         await chapterPDF.CopyToAsync(fileStream);

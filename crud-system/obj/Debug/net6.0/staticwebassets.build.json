@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "35XMZRDz+UpkQ1bICGIvod6qNli8ebmdWllvZo/8Qew=",
+  "Hash": "9S20c9Wcyl1zDlTSOST3+iwaeaTI7yWU123j5H5fnMk=",
   "Source": "crud-system",
   "BasePath": "_content/crud-system",
   "Mode": "Default",
@@ -1817,6 +1817,57 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\uploads\\pdfs\\eDoctor_01.pdf",
+      "SourceId": "crud-system",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\",
+      "BasePath": "_content/crud-system",
+      "RelativePath": "uploads/pdfs/eDoctor_01.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\pdfs\\eDoctor_01.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\uploads\\pdfs\\Job_Submittal_&_Onboardin.pdf",
+      "SourceId": "crud-system",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\",
+      "BasePath": "_content/crud-system",
+      "RelativePath": "uploads/pdfs/Job_Submittal_&_Onboardin.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\pdfs\\Job_Submittal_&_Onboardin.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\uploads\\videos\\explorer_xv12WwpMCO.gif",
+      "SourceId": "crud-system",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\",
+      "BasePath": "_content/crud-system",
+      "RelativePath": "uploads/videos/explorer_xv12WwpMCO.gif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\videos\\explorer_xv12WwpMCO.gif"
     }
   ]
 }

@@ -421,6 +421,18 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\uploads\\pdfs\\Job_Submittal_&_Onboardin.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\Job_Submittal_&_Onboardin.pdf"
+    },
+    {
+      "Id": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\uploads\\pdfs\\eDoctor_01.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\eDoctor_01.pdf"
+    },
+    {
+      "Id": "C:\\Users\\pc\\Documents\\GitHub\\asp-crud-system\\crud-system\\wwwroot\\uploads\\videos\\explorer_xv12WwpMCO.gif",
+      "PackagePath": "staticwebassets\\uploads\\videos\\explorer_xv12WwpMCO.gif"
+    },
+    {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.crud-system.props",
       "PackagePath": "build\\crud-system.props"
     },
