@@ -35,7 +35,7 @@ namespace crud_system.Controllers
                     HttpContext.Session.SetString("UserId", user.StudentID.ToString());
                     HttpContext.Session.SetString("Username", user.Username);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Courses");
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");

@@ -1,10 +1,12 @@
 ﻿using crud_system.Data;
 using crud_system.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace crud_system.Controllers
 {
+    [Authorize]
     public class ChapterController : Controller
     {
         private readonly CourseManagementContext _context;

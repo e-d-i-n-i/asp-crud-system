@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using crud_system.Models;
 using crud_system.Data;
+using Microsoft.AspNetCore.Authorization;
 
+[AllowAnonymous]
 public class CoursesController : Controller
 {
     private readonly CourseManagementContext _context;
@@ -12,6 +14,7 @@ public class CoursesController : Controller
         _context = context;
     }
 
+    
     // GET: Courses
     public async Task<IActionResult> Index()
     {

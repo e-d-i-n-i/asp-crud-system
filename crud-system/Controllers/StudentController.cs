@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using crud_system.Models;
 using crud_system.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize]
 public class StudentsController : Controller
 {
     private readonly CourseManagementContext _context;

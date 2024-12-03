@@ -36,11 +36,15 @@
 
                         @if (HttpContextAccessor.HttpContext.Session.GetString("Username") != null)
                         {
-                            <a asp-controller="Account" asp-action="Logout">Logout</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
                         }
                         else
                         {
-                            <a asp-controller="Account" asp-action="Login">Login</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
                         }
 
                     </ul>
